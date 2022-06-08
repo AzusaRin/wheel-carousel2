@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel滑动条</title>
+  <style>
+    .container {
+      max-width: 800px;
+      padding: 16px;
+      margin: 30px auto;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+    }
+
+    .carousel {
+      position: relative;
+      height: 400px;
+    }
+
+    .carousel .panel>a {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      opacity: 0;
+      z-index: 0;
+      transition: all .3s;
+    }
+
+    .carousel .panel >a.active{
+      opacity: 1;
+      z-index: 10;
+    }
+
+    .carousel .panel>a:nth-child(odd) {
+      background-color: aqua;
+    }
+
+    .carousel .panel>a:nth-child(even) {
+      background-color: pink;
+    }
+
+    .carousel .arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 100;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      background: rgba(31, 45, 61, 0.11);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .carousel .arrows .pre {
+      left: 10px;
+      transform: translateX(-10px) translateY(-50%);
+      opacity: 0;
+    }
+
+    .carousel:hover .arrows .pre {
+      opacity: 1;
+      transform: translate(10px, -50%);
+      transition: all 0.3s;
+    }
+
+    .carousel .arrows .pre::after {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-left: 1.2px solid #fff;
+      border-top: 1.2px solid #fff;
+      margin-left: 5px;
+      transform: rotate(-45deg);
+
+    }
+
+    .carousel .arrows .next {
+      right: 10px;
+      transform: translateX(10px) translateY(-50%);
+      opacity: 0;
+
+    }
+
+    .carousel:hover .arrows .next {
+      opacity: 1;
+      transform: translate(-10px, -50%);
+      transition: all 0.3s;
+    }
+
+    .carousel .arrows .next::after {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-right: 1.2px solid #fff;
+      border-top: 1.2px solid #fff;
+      margin-right: 5px;
+      transform: rotate(45deg);
+
+    }
+
+    .carousel .indicators {
+      position: absolute;
+      left: 50%;
+      z-index: 100;
+      transform: translateX(-50%);
+      bottom: 10px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+    }
+    .carousel .indicators > li{
+      display: inline-block;
+      padding: 5px 0;
+      cursor: pointer;
+    }
+
+    .carousel .indicators > li::before {
+     content: '';
+     display: block;
+      width: 30px;
+     height: 2px;
+
+      background: #c0c4cc;
+
+    }
+    .carousel .indicators > li.active::before {
+      background-color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Carousel滑动条</h2>
+    <div class="carousel">
+      <div class="panel">
+        <a href="#0" class="active">0</a>
+        <a href="#1">1</a>
+        <a href="#2">2</a>
+        <a href="#3">3</a>
+        <div class="arrows">
+          <button class="arrow pre"></button>
+          <button class="arrow next"></button>
+        </div>
+        <ul class="indicators">
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+const $ = str => document.querySelector(str)
+const $$ = str => document.querySelectorAll(str)
+
+const $pre = $('.carousel .pre')
+const $next= $('.carousel .next')
+const $$indicators = $$('.carousel .indicators > li')
+const $$panels = $$('.carousel .panel > a')
+
+const getIndex = () =>{return [...$$indicators].indexOf($('.carousel .indicators > li.active'))}
+const getPreIndex = () => {return (getIndex() - 1 + [...$$indicators].length) % [...$$indicators].length}
+const getNextIndex =() => {return (getIndex() + 1) % [...$$indicators].length}
+
+  const setPage = index => {
+    $$panels.forEach($panel => $panel.classList.remove('active'))
+      $$panels[index].classList.add('active')
+    }
+
+    const setIndicator = index => {
+     $$indicators.forEach($indicator => $indicator.classList.remove('active'))
+      $$indicators[index].classList.add('active')
+    }
+
+$pre.onclick = function(){
+let index = getPreIndex()
+
+setPage(index)
+setIndicator(index)
+}
+$next.onclick = function(){
+let index = getNextIndex()
+setPage(index)
+setIndicator(index)
+}
+$$indicators.forEach($indicator =>{
+  $indicator.onclick = function(event){
+let index = [...$$indicators].indexOf(event.target)
+setPage(index)
+setIndicator(index)
+  }
+})
+  </script>
+</body>
+
+</html>
